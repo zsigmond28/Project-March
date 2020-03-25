@@ -1,9 +1,7 @@
 package hu.attilazsigmond.customers;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Customers {
 
@@ -30,6 +28,8 @@ public class Customers {
         }
 
         System.out.println(lista);
+
+
 
     }
 
