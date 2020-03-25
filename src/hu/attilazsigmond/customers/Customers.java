@@ -5,6 +5,8 @@ import java.util.*;
 
 public class Customers implements Serializable {
 
+
+
     public static void main(String[] args) {
 
         File file = new File("C:/Users/Attila/Idea_Project/a/src/hu/attilazsigmond/ugyfelek.csv");
@@ -14,6 +16,7 @@ public class Customers implements Serializable {
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             br.readLine(); // az első sort átugorja.
+
             while ((sor = br.readLine()) != null) {
 
                 String [] ugyfel = sor.split(",");
@@ -28,10 +31,6 @@ public class Customers implements Serializable {
             e.printStackTrace();
         }
 
-//        for (Customer c : lista){
-//            System.out.println(c);
-//        }
-
 
         // Sorba rendez az Anyja neve szerint
         Collections.sort(lista, new sortByMotherName());
@@ -40,7 +39,7 @@ public class Customers implements Serializable {
         }
 
         // Kiirja az első sorbarendezést csv-be.
-        File sortfile1 = new File("C:\\Users\\Attila\\Idea_Project\\a\\src\\hu\\attilazsigmond\\sortByMotherName.csv");
+        File sortfile1 = new File("C:\\Users\\Attila\\Idea_Project\\a\\src\\hu\\attilazsigmond\\nevek.csv");
         try {
             FileOutputStream fos = new FileOutputStream(sortfile1);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -59,7 +58,7 @@ public class Customers implements Serializable {
         }
 
         // Kiirja a második sorbarendezést csv-be.
-        File sortfile2 = new File("C:\\Users\\Attila\\Idea_Project\\a\\src\\hu\\attilazsigmond\\sortByStartDate.csv");
+        File sortfile2 = new File("C:\\Users\\Attila\\Idea_Project\\a\\src\\hu\\attilazsigmond\\szamlanyitas.csv");
         try {
             FileOutputStream fos = new FileOutputStream(sortfile2);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -71,9 +70,34 @@ public class Customers implements Serializable {
             e.printStackTrace();
         }
 
+        System.out.println("\n");
+
+        //sorba rendezi az összegek szerint
+        Collections.sort(lista, Comparator.comparing(Customer::getSum));
+        for (int i=0; i < lista.size(); i++){
+            System.out.println(lista.get(i));
+        }
+
+        // Kiirja a harmadik sorbarendezést csv-be.
+        File sortfile3 = new File("C:\\Users\\Attila\\Idea_Project\\a\\src\\hu\\attilazsigmond\\penzosszegek.csv");
+        try {
+            FileOutputStream fos = new FileOutputStream(sortfile3);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(lista);
+            oos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
 
 
     }
+
+
 
     private static Customer creatACustomer(String[] ugyfel){
         String name = ugyfel[0];
@@ -101,8 +125,8 @@ class Customer implements Serializable{
     private String placeOfBirth;
     public String accountStart;
     private String accountNumber;
-    private int egyenleg;
-    private int lekotottErtek;
+    public Integer egyenleg;
+    public Integer lekotottErtek;
 
     //konstruktor:
     public Customer(String name, String motherName, String dateOfBirth, String placeOfBirth,
@@ -130,6 +154,9 @@ class Customer implements Serializable{
                 egyenleg + " " +
                 lekotottErtek;
     }
+
+    public Integer getSum() {return egyenleg + lekotottErtek;}
+
 }
 
 class sortByMotherName implements Comparator<Customer> {
